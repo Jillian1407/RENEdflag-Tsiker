@@ -1,0 +1,400 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+body {
+  font-family: "Press Start 2P", Consolas, sans-serif;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.start-screen {
+  width: 100%;
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.intro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-family: "Press Start 2P", Consolas, sans-serif;
+  color: white;
+  font-weight: bolder;
+  -webkit-text-stroke: 1px black;
+  text-shadow: 2px 2px 0px black;
+  width: 90%;
+}
+
+.barangay {
+  margin: 0 0 25px;
+  font-weight: bolder;
+  font-size: 20px;
+  color: white;
+  -webkit-text-stroke: 1px black;
+  text-shadow: 1px 1px 0px black;
+}
+
+.intro h1 {
+  margin: 0 0 30px;
+  color: white;
+  font-size: 40px;
+  -webkit-text-stroke: 1px black;
+  text-shadow: 3px 3px 0px black;
+}
+
+.player {
+  margin: 0 0 30px;
+  font-weight: bolder;
+  font-size: 25px;
+  color: white;
+  -webkit-text-stroke: 1px black;
+  text-shadow: 2px 2px 0px black;
+}
+
+button {
+  font-family: "Press Start 2P", Consolas, sans-serif;
+  font-size: 20px;
+  font-weight: bolder;
+  color: white;
+  background: transparent;
+  border: none;
+  padding: 10px 20px;
+  -webkit-text-stroke: 1px black;
+  text-shadow: 3px 3px 0px black;
+  cursor: pointer;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+.game {
+  min-height: 100vh;
+  background-image: url("./img/bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding-top: 50px;
+  text-align: center;
+}
+
+.game h1 {
+  color: white;
+  font-family: "Press Start 2P", Consolas, sans-serif;
+  font-size: 30px;
+  -webkit-text-stroke: 1px black;
+  text-shadow: 3px 3px 0px black;
+}
+
+.selection-box {
+  margin: 50px auto;
+  width: 90%;
+  max-width: 1000px;
+  text-align: center;
+}
+
+.character-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+
+.characters {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+
+.character-option {
+  width: 180px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.character-option img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.character-option.selected {
+  transform: scale(1.1);
+  border: 4px solid white;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.arrow {
+  font-size: 30px;
+  color: white;
+  background: transparent;
+  border: none;
+  -webkit-text-stroke: 1px black;
+  text-shadow: 3px 3px 0px black;
+}
+
+.character-name {
+  margin-top: 30px;
+  color: white;
+  font-family: "Press Start 2P", Consolas, sans-serif;
+  font-size: 20px;
+  -webkit-text-stroke: 1px black;
+  text-shadow: 2px 2px 0px black;
+}
+
+.select-button {
+  margin-top: 30px;
+}
+
+.game-screen {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.game-content {
+  color: white;
+  font-family: "Press Start 2P", Consolas, sans-serif;
+  -webkit-text-stroke: 1px black;
+  text-shadow: 3px 3px 0px black;
+}
+
+.selected-character {
+  width: 250px;
+  max-height: 300px;
+  object-fit: contain;
+}
+
+.game-content h2 {
+  font-size: 20px;
+}
+
+.game-content p {
+  color: white;
+  font-size: 14px;
+}
+
+.game-container {
+  min-height: 100vh;
+  background: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.game-container canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.game-character {
+  color: white;
+  font-family: "Press Start 2P", Consolas, sans-serif;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.question-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.question-banner {
+  background: white;
+  border: 6px solid black;
+  padding: 35px 50px;
+  text-align: center;
+  font-family: "Press Start 2P", Consolas, sans-serif;
+  box-shadow: 8px 8px 0 black;
+}
+
+.question-banner h2 {
+  margin: 0 0 30px;
+  font-size: 28px;
+  color: black;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+}
+
+.question-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.question-buttons button {
+  color: white;
+  background: black;
+  border: 3px solid black;
+  padding: 15px 25px;
+  font-family: "Press Start 2P", Consolas, sans-serif;
+  font-size: 16px;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+}
+
+.question-buttons button:hover {
+  background: white;
+  color: black;
+  transform: scale(1.1);
+}
+
+.result-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.65);
+  pointer-events: auto;
+}
+
+.result-banner {
+  position: relative;
+  z-index: 10000;
+  width: 700px;
+  padding: 35px 45px;
+  background: #102f35;
+  border: 6px solid #72d6a2;
+  border-radius: 30px;
+  text-align: center;
+  box-shadow: 0 10px 0 #071d22, 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+
+.result-title {
+  display: inline-block;
+  padding: 10px 30px;
+  margin-bottom: 20px;
+  background: #e84545;
+  color: white;
+  border: 4px solid #721d2a;
+  border-radius: 14px;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.result-flag {
+  margin: 10px auto 20px;
+  padding: 12px 30px;
+  width: fit-content;
+  min-width: 300px;
+  border-radius: 18px;
+  color: white;
+  font-size: 42px;
+  font-weight: 900;
+  text-shadow: 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.result-flag.green {
+  background: #35c96b;
+  border: 5px solid #176b3b;
+  box-shadow: 0 7px 0 #176b3b;
+}
+
+.result-flag.orange {
+  background: #f39a32;
+  border: 5px solid #8b4c12;
+  box-shadow: 0 7px 0 #8b4c12;
+}
+
+.result-flag.red {
+  background: #ed4545;
+  border: 5px solid #7b1e27;
+  box-shadow: 0 7px 0 #7b1e27;
+}
+
+.result-percentage {
+  margin: 15px auto;
+  width: 130px;
+  padding: 12px;
+  background: white;
+  border: 4px solid #183b40;
+  border-radius: 15px;
+  color: #183b40;
+  font-size: 36px;
+  font-weight: 900;
+}
+
+.result-score {
+  margin: 15px 0;
+  color: white;
+  font-size: 19px;
+}
+
+.result-score strong {
+  color: #72d6a2;
+}
+
+.result-description {
+  margin: 10px auto 25px;
+  max-width: 600px;
+  color: #d5e9e6;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.restart-button {
+  position: relative;
+  z-index: 10001;
+  padding: 13px 28px;
+  background: #4bdc70;
+  color: white;
+  border: 4px solid #176b3b;
+  border-radius: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #176b3b;
+  pointer-events: auto;
+}
+
+.restart-button:hover {
+  transform: translateY(-2px);
+}
+
+.restart-button:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 #176b3b;
+}
