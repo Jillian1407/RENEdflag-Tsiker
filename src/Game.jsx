@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from "react";
 
 import finishLine from "./img/finish.png";
@@ -7,6 +6,8 @@ import platformSmallTall from "./img/platformSmallTall.png";
 import background from "./img/background.png";
 import hills from "./img/hills.png";
 import car from "./img/car.png";
+import car1 from "./img/car1.png";
+import car2 from "./img/car2.png";
 import redFlag from "./img/redflag.png";
 
 function Game({ character, onPlayAgain }) {
@@ -39,7 +40,9 @@ function Game({ character, onPlayAgain }) {
 
   const handleAnswer = (answer) => {
     if (answer === "YES") {
-      setYesAnswers((previous) => previous + 1);
+      setYesAnswers((previous) =>
+        Math.min(previous + 1, totalFlags)
+      );
     }
 
     setShowQuestion(false);
@@ -73,11 +76,18 @@ function Game({ character, onPlayAgain }) {
 
     const playerImage = createImage(characterRef.current.image);
     const platformImage = createImage(platform);
-    const platformSmallTallImage = createImage(platformSmallTall);
+    const platformSmallTallImage =
+      createImage(platformSmallTall);
     const backgroundImage = createImage(background);
     const hillsImage = createImage(hills);
     const finishImage = createImage(finishLine);
-    const carImage = createImage(car);
+
+    const carImages = [
+      createImage(car),
+      createImage(car1),
+      createImage(car2),
+    ];
+
     const redFlagImage = createImage(redFlag);
 
     class Player {
@@ -225,7 +235,12 @@ function Game({ character, onPlayAgain }) {
 
 
     class Car {
-      constructor({ x, y, platform }) {
+      constructor({
+        x,
+        y,
+        platform,
+        image,
+      }) {
         this.position = {
           x,
           y,
@@ -233,16 +248,19 @@ function Game({ character, onPlayAgain }) {
 
         this.platform = platform;
 
-        
-        this.width = 160;
-        this.height = 80;
+        this.image = image;
 
-        this.speed = 4;
+        this.width = 250;
+        this.height = 200;
+
+        this.speed = 1.2;
+
+        this.hasPassed = false;
       }
 
       draw() {
         c.drawImage(
-          carImage,
+          this.image,
           this.position.x,
           this.position.y,
           this.width,
@@ -253,16 +271,11 @@ function Game({ character, onPlayAgain }) {
       update() {
         this.position.x -= this.speed;
 
-        const leftLimit =
-          this.platform.position.x;
-
-        const rightLimit =
-          this.platform.position.x +
-          this.platform.width -
-          this.width;
-
-        if (this.position.x <= leftLimit) {
-          this.position.x = rightLimit;
+        if (
+          this.position.x + this.width < 90
+        ) {
+          this.hasPassed = true;
+          return;
         }
 
         this.draw();
@@ -276,7 +289,6 @@ function Game({ character, onPlayAgain }) {
           y,
         };
 
-        
         this.width = 80;
         this.height = 100;
 
@@ -311,53 +323,37 @@ function Game({ character, onPlayAgain }) {
     let finishPlatform = null;
 
     let animationId = null;
-    let gameWon = false;
 
+    let gameWon = false;
     let flagsCollected = 0;
     let currentHearts = maxHearts;
 
     let usedQuestions = [];
     let respawnCooldown = false;
 
+    
+    let carSpawnTimers = [];
+
     const questions = [
       "Laging binabalewala yung feelings mo kasi “mababaw lang naman yan.”",
-
       "Ginagawang competition ang relationship.",
-
       "Kinukumpara ka sa ibang tao para ma-insecure ka.",
-
       "Ginagamit ang secrets mo laban sa’yo kapag may away.",
-
       "Nanghihingi ng favors pero never nag-reciprocate.",
-
       "Feeling entitled sa time, attention, at effort mo.",
-
       "Ayaw kang suportahan kapag may achievement ka.",
-
       "Nang-aasar sa insecurities mo kahit alam niyang sensitive ka doon.",
-
       "Mahilig mangako pero hindi tinutupad.",
-
       "Nag-iiba ang trato depende sa kung sino ang kasama.",
-
       "Disrespectful sa service workers, guards, or strangers.",
-
       "Laging may excuse kapag nahuhuli sa mali.",
-
       "Ginagawang personal attack ang simpleng disagreement.",
-
       "Ayaw mag-compromise kahit maliit na bagay.",
-
       "Ginagamit ang pera o gifts para makuha ang gusto niya.",
-
       "Mahilig mangialam sa decisions mo kahit hindi naman siya involved.",
-
       "Pinaparamdam sa’yo na kailangan mong “patunayan” palagi ang worth mo.",
-
       "Hindi marunong mag-celebrate ng success ng ibang tao.",
-
       "Nagpaparinig online imbes na ayusin nang maayos ang problema.",
-
       "Kapag may conflict, biglang nagde-delete ng messages/posts para palabasing ikaw ang may kasalanan.",
     ];
 
@@ -372,7 +368,6 @@ function Game({ character, onPlayAgain }) {
           { x: 2200, y: 470, type: "ground", width: 400 },
         ],
       },
-
       {
         width: 2800,
         platforms: [
@@ -383,7 +378,6 @@ function Game({ character, onPlayAgain }) {
           { x: 2400, y: 470, type: "ground", width: 400 },
         ],
       },
-
       {
         width: 2900,
         platforms: [
@@ -395,7 +389,6 @@ function Game({ character, onPlayAgain }) {
           { x: 2650, y: 470, type: "ground", width: 250 },
         ],
       },
-
       {
         width: 3000,
         platforms: [
@@ -407,7 +400,6 @@ function Game({ character, onPlayAgain }) {
           { x: 2500, y: 470, type: "ground", width: 500 },
         ],
       },
-
       {
         width: 2900,
         platforms: [
@@ -418,7 +410,6 @@ function Game({ character, onPlayAgain }) {
           { x: 2400, y: 470, type: "ground", width: 500 },
         ],
       },
-
       {
         width: 3100,
         platforms: [
@@ -430,7 +421,6 @@ function Game({ character, onPlayAgain }) {
           { x: 2450, y: 470, type: "ground", width: 650 },
         ],
       },
-
       {
         width: 3200,
         platforms: [
@@ -442,7 +432,6 @@ function Game({ character, onPlayAgain }) {
           { x: 2800, y: 470, type: "ground", width: 400 },
         ],
       },
-
       {
         width: 3300,
         platforms: [
@@ -454,7 +443,6 @@ function Game({ character, onPlayAgain }) {
           { x: 2550, y: 470, type: "ground", width: 750 },
         ],
       },
-
       {
         width: 3000,
         platforms: [
@@ -465,7 +453,6 @@ function Game({ character, onPlayAgain }) {
           { x: 2650, y: 470, type: "ground", width: 350 },
         ],
       },
-
       {
         width: 3400,
         platforms: [
@@ -487,7 +474,10 @@ function Game({ character, onPlayAgain }) {
 
     const minimumFlagDistance = 1800;
 
-    function generatePlatformSection(startX, pattern) {
+    function generatePlatformSection(
+      startX,
+      pattern
+    ) {
       pattern.platforms.forEach((data) => {
         let image;
 
@@ -508,11 +498,8 @@ function Game({ character, onPlayAgain }) {
       });
     }
 
-    
 
-    function createOneCar() {
-      cars = [];
-
+    function createOneCar(carImage, platformIndex) {
       const longPlatforms = platforms
         .filter(
           (currentPlatform) =>
@@ -528,7 +515,10 @@ function Game({ character, onPlayAgain }) {
         return;
       }
 
-      const targetPlatform = longPlatforms[0];
+      const targetPlatform =
+        longPlatforms[
+          platformIndex % longPlatforms.length
+        ];
 
       const carX =
         targetPlatform.position.x +
@@ -543,8 +533,43 @@ function Game({ character, onPlayAgain }) {
           x: carX,
           y: carY,
           platform: targetPlatform,
+          image: carImage,
         })
       );
+    }
+
+    
+
+    function createCars() {
+      
+      carSpawnTimers.forEach((timer) => {
+        clearTimeout(timer);
+      });
+
+      carSpawnTimers = [];
+
+      
+      cars = [];
+
+      createOneCar(carImages[0], 0);
+
+      
+      const secondCarTimer = setTimeout(() => {
+        if (!gameWon) {
+          createOneCar(carImages[1], 1);
+        }
+      }, 10000);
+
+      carSpawnTimers.push(secondCarTimer);
+
+      
+      const thirdCarTimer = setTimeout(() => {
+        if (!gameWon) {
+          createOneCar(carImages[2], 2);
+        }
+      }, 20000);
+
+      carSpawnTimers.push(thirdCarTimer);
     }
 
     function getUnusedQuestion() {
@@ -558,11 +583,10 @@ function Game({ character, onPlayAgain }) {
         return null;
       }
 
-      const randomIndex =
-        Math.floor(
-          Math.random() *
-            unusedQuestions.length
-        );
+      const randomIndex = Math.floor(
+        Math.random() *
+          unusedQuestions.length
+      );
 
       const question =
         unusedQuestions[randomIndex];
@@ -585,7 +609,6 @@ function Game({ character, onPlayAgain }) {
         return false;
       }
 
-      // Center position for 70px wide flag
       const flagX =
         currentPlatform.position.x +
         currentPlatform.width / 2 -
@@ -607,8 +630,7 @@ function Game({ character, onPlayAgain }) {
     function createFlagOnPlatform(
       currentPlatform
     ) {
-      const question =
-        getUnusedQuestion();
+      const question = getUnusedQuestion();
 
       if (!question) {
         return null;
@@ -619,7 +641,6 @@ function Game({ character, onPlayAgain }) {
         currentPlatform.width / 2 -
         35;
 
-      // 90px tall flag
       const flagY =
         currentPlatform.position.y - 90;
 
@@ -673,19 +694,20 @@ function Game({ character, onPlayAgain }) {
     }
 
     function respawnMissedFlag(oldFlag) {
-      const platformsToRight = platforms
-        .filter(
-          (currentPlatform) =>
-            currentPlatform.position.x >
-              oldFlag.position.x +
-                minimumFlagDistance &&
-            currentPlatform.width >= 100
-        )
-        .sort(
-          (a, b) =>
-            a.position.x -
-            b.position.x
-        );
+      const platformsToRight =
+        platforms
+          .filter(
+            (currentPlatform) =>
+              currentPlatform.position.x >
+                oldFlag.position.x +
+                  minimumFlagDistance &&
+              currentPlatform.width >= 100
+          )
+          .sort(
+            (a, b) =>
+              a.position.x -
+              b.position.x
+          );
 
       for (
         const currentPlatform of platformsToRight
@@ -720,11 +742,9 @@ function Game({ character, onPlayAgain }) {
           finishPlatform.position.x +
           finishPlatform.width -
           180,
-
         y:
           finishPlatform.position.y -
           120,
-
         image: finishImage,
       });
     }
@@ -869,7 +889,6 @@ function Game({ character, onPlayAgain }) {
 
       player.position = {
         x: respawnX,
-
         y:
           safePlatform.position.y -
           player.height -
@@ -933,6 +952,13 @@ function Game({ character, onPlayAgain }) {
     }
 
     function initLevel() {
+      
+      carSpawnTimers.forEach((timer) => {
+        clearTimeout(timer);
+      });
+
+      carSpawnTimers = [];
+
       player.position = {
         x: 100,
         y: 100,
@@ -946,11 +972,9 @@ function Game({ character, onPlayAgain }) {
       player.isJumping = false;
 
       gameWon = false;
-
       flagsCollected = 0;
 
       setFlagCount(0);
-
       setShowQuestion(false);
       setCurrentQuestion("");
 
@@ -999,11 +1023,7 @@ function Game({ character, onPlayAgain }) {
         currentX += pattern.width;
       }
 
-      /*
-       * IMPORTANT:
-       * One car only.
-       */
-      createOneCar();
+      createCars();
 
       generateInitialFlags();
 
@@ -1122,6 +1142,10 @@ function Game({ character, onPlayAgain }) {
       for (
         const currentCar of cars
       ) {
+        if (currentCar.hasPassed) {
+          continue;
+        }
+
         const playerRight =
           player.position.x +
           player.width;
@@ -1158,64 +1182,62 @@ function Game({ character, onPlayAgain }) {
     }
 
     function handleRedFlagCollection() {
-      redFlags.forEach(
-        (flag) => {
-          if (flag.collected) {
-            return;
-          }
+      redFlags.forEach((flag) => {
+        if (flag.collected) {
+          return;
+        }
 
-          const playerRight =
-            player.position.x +
-            player.width;
+        const playerRight =
+          player.position.x +
+          player.width;
 
-          const playerBottom =
-            player.position.y +
-            player.height;
+        const playerBottom =
+          player.position.y +
+          player.height;
 
-          const flagRight =
-            flag.position.x +
-            flag.width;
+        const flagRight =
+          flag.position.x +
+          flag.width;
 
-          const flagBottom =
-            flag.position.y +
-            flag.height;
+        const flagBottom =
+          flag.position.y +
+          flag.height;
 
-          const touchingFlag =
-            player.position.x <
-              flagRight &&
-            playerRight >
-              flag.position.x &&
-            player.position.y <
-              flagBottom &&
-            playerBottom >
-              flag.position.y;
+        const touchingFlag =
+          player.position.x <
+            flagRight &&
+          playerRight >
+            flag.position.x &&
+          player.position.y <
+            flagBottom &&
+          playerBottom >
+            flag.position.y;
 
-          if (touchingFlag) {
-            flag.collected = true;
+        if (touchingFlag) {
+          flag.collected = true;
 
-            flagsCollected += 1;
+          flagsCollected += 1;
 
-            setFlagCount(
-              flagsCollected
-            );
+          setFlagCount(
+            flagsCollected
+          );
 
-            setCurrentQuestion(
-              flag.question
-            );
+          setCurrentQuestion(
+            flag.question
+          );
 
-            setShowQuestion(true);
+          setShowQuestion(true);
 
-            showQuestionRef.current = true;
+          showQuestionRef.current = true;
 
-            if (
-              flagsCollected ===
-              totalFlags
-            ) {
-              createFinish();
-            }
+          if (
+            flagsCollected ===
+            totalFlags
+          ) {
+            createFinish();
           }
         }
-      );
+      });
     }
 
     function handleMissedFlags() {
@@ -1271,18 +1293,14 @@ function Game({ character, onPlayAgain }) {
         }
       );
 
-      cars.forEach(
-        (currentCar) => {
-          currentCar.position.x +=
-            amount;
-        }
-      );
+      cars.forEach((currentCar) => {
+        currentCar.position.x +=
+          amount;
+      });
 
-      redFlags.forEach(
-        (flag) => {
-          flag.position.x += amount;
-        }
-      );
+      redFlags.forEach((flag) => {
+        flag.position.x += amount;
+      });
 
       if (finish) {
         finish.position.x += amount;
@@ -1391,6 +1409,15 @@ function Game({ character, onPlayAgain }) {
         player.velocity.x = 0;
         player.velocity.y = 0;
 
+       
+        carSpawnTimers.forEach(
+          (timer) => {
+            clearTimeout(timer);
+          }
+        );
+
+        carSpawnTimers = [];
+
         setShowResults(true);
       }
     }
@@ -1420,21 +1447,20 @@ function Game({ character, onPlayAgain }) {
         }
       );
 
-      redFlags.forEach(
-        (flag) => {
-          flag.draw();
-        }
-      );
+      redFlags.forEach((flag) => {
+        flag.draw();
+      });
 
-      cars.forEach(
-        (currentCar) => {
+      
+      cars.forEach((currentCar) => {
+        if (!currentCar.hasPassed) {
           if (!gameWon) {
             currentCar.update();
           } else {
             currentCar.draw();
           }
         }
-      );
+      });
 
       player.update();
 
@@ -1453,9 +1479,7 @@ function Game({ character, onPlayAgain }) {
         }
 
         handleRedFlagCollection();
-
         handleMissedFlags();
-
         handlePlayerMovement();
       }
 
@@ -1553,6 +1577,15 @@ function Game({ character, onPlayAgain }) {
         );
       }
 
+      
+      carSpawnTimers.forEach(
+        (timer) => {
+          clearTimeout(timer);
+        }
+      );
+
+      carSpawnTimers = [];
+
       window.removeEventListener(
         "keydown",
         handleKeyDown
@@ -1612,7 +1645,8 @@ function Game({ character, onPlayAgain }) {
       </div>
 
       <div className="game-character">
-        Red Flags: {flagCount}/{totalFlags}
+        Red Flags: {flagCount}/
+        {totalFlags}
       </div>
 
       <div className="game-hearts">
@@ -1666,7 +1700,6 @@ function Game({ character, onPlayAgain }) {
       {showResults && (
         <div className="result-overlay">
           <div className="result-banner">
-
             <div className="result-title">
               GAME COMPLETE!
             </div>
@@ -1726,4 +1759,3 @@ function Game({ character, onPlayAgain }) {
 }
 
 export default Game;
-

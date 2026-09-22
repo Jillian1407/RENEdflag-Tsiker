@@ -333,7 +333,7 @@ button:active {
   min-width: 300px;
   border-radius: 18px;
   color: white;
-  font-size: 42px;
+  font-size: 29px;
   font-weight: 900;
   text-shadow: 2px 3px rgba(0, 0, 0, 0.3);
 }
@@ -358,13 +358,13 @@ button:active {
 
 .result-percentage {
   margin: 15px auto;
-  width: 130px;
+  width: 150px;
   padding: 12px;
   background: white;
   border: 4px solid #183b40;
   border-radius: 15px;
   color: #183b40;
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 900;
 }
 
